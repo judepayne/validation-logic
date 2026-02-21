@@ -1,6 +1,6 @@
 {
   "$schema": "http://json-schema.org/draft-07/schema#",
-  "$id": "https://bank.example.com/schemas/loan/v1.0.0",
+  "$id": "https://raw.githubusercontent.com/judepayne/validation-logic/main/models/loan.schema.v1.0.0.json",
   "version": "1.0.0",
   "title": "Loan (v1.0.0)",
   "description": "A loan instrument under a facility - Schema Version 1.0.0",
