@@ -175,24 +175,5 @@ class LoanV2:
         self._record_access("notes", "notes")
         return self._data.get("notes")
 
-    @property
-    def overdue(self) -> bool:
-        self._record_access("overdue", "computed.is_overdue")
-        if self.maturity:
-            return date.today() > self.maturity
-        return False
-
-    @property
-    def repaid(self) -> float:
-        self._record_access("repaid", "computed.utilization_amount")
-        return self.principal - self.balance
-
-    @property
-    def repayment_pct(self) -> float:
-        self._record_access("repayment_pct", "computed.utilization_percentage")
-        if self.principal > 0:
-            return (self.repaid / self.principal) * 100
-        return 0.0
-
     def __repr__(self) -> str:
         return f"LoanV2(id='{self.id}', principal={self.principal}, currency='{self.currency}')"
