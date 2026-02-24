@@ -1,4 +1,5 @@
 {
+  "schema":           { "physical_path": "$schema" },
   "id":               { "physical_path": "id" },
   "reference":        { "physical_path": "loan_number" },
   "facility":         { "physical_path": "facility_id" },
