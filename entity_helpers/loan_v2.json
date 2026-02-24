@@ -1,0 +1,30 @@
+{
+  "id":               { "physical_path": "id" },
+  "reference":        { "physical_path": "reference_number" },
+  "facility":         { "physical_path": "facility_ref" },
+  "category":         { "physical_path": "loan_category" },
+  "client":           { "physical_path": "client_id" },
+  "collateral":       { "physical_path": "collateral_id" },
+
+  "principal":        { "physical_path": "financial.principal_amount" },
+  "balance":          { "physical_path": "financial.outstanding_balance" },
+  "currency":         { "physical_path": "financial.currency" },
+  "rate":             { "physical_path": "financial.rate" },
+  "rate_type":        { "physical_path": "financial.interest_type" },
+  "origination_fee":  { "physical_path": "financial.fees.origination_fee" },
+  "servicing_fee":    { "physical_path": "financial.fees.servicing_fee" },
+
+  "inception":        { "physical_path": "dates.origination_date",   "to_logical": "str_to_date",     "to_physical": "date_to_str" },
+  "maturity":         { "physical_path": "dates.maturity_date",       "to_logical": "str_to_date",     "to_physical": "date_to_str" },
+  "first_payment":    { "physical_path": "dates.first_payment_date",  "to_logical": "str_to_date",     "to_physical": "date_to_str" },
+  "last_modified":    { "physical_path": "dates.last_modified_date",  "to_logical": "str_to_datetime", "to_physical": "datetime_to_str" },
+
+  "status":           { "physical_path": "status" },
+  "purpose":          { "physical_path": "loan_type" },
+  "secured":          { "physical_path": "collateral_required" },
+
+  "payment_frequency":{ "physical_path": "repayment_schedule.frequency" },
+  "payment_count":    { "physical_path": "repayment_schedule.number_of_payments" },
+
+  "notes":            { "physical_path": "notes" }
+}

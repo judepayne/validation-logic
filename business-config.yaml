@@ -62,12 +62,12 @@ rulesets:
 # Schema URL to entity helper class mapping
 # Keys match the $id values in the schema files (raw GitHub URLs)
 schema_to_helper_mapping:
-  "https://raw.githubusercontent.com/judepayne/validation-logic/main/models/loan.schema.v1.0.0.json": "loan_v1.LoanV1"
-  "https://raw.githubusercontent.com/judepayne/validation-logic/main/models/loan.schema.v2.0.0.json": "loan_v2.LoanV2"
+  "https://raw.githubusercontent.com/judepayne/validation-logic/main/models/loan.schema.v1.0.0.json": "loan_v1"
+  "https://raw.githubusercontent.com/judepayne/validation-logic/main/models/loan.schema.v2.0.0.json": "loan_v2"
 
 # Default helper when no $schema field is present
 default_helpers:
-  loan: "loan_v1.LoanV1"
+  loan: "loan_v1"
   # facility: "facility_v1.FacilityV1"  # TODO: Implement
   # deal: "deal_v1.DealV1"              # TODO: Implement
 
