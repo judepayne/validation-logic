@@ -24,6 +24,11 @@ class Rule(ValidationRule):
         principal = self.entity.principal
         balance = self.entity.balance
 
+        if principal is None:
+            return ("NORUN", "Cannot access principal amount")
+        if balance is None:
+            return ("NORUN", "Outstanding balance is absent — cannot check balance constraints")
+
         # Check balance doesn't exceed principal
         if balance > principal:
             return ("FAIL", f"Outstanding balance ({balance}) exceeds principal amount ({principal})")
