@@ -4,12 +4,11 @@ Rule 001 v1: JSON Schema Validation
 Validates that loan entity data conforms to its declared JSON schema.
 """
 
-import json
-import urllib.request
 from jsonschema import validate, ValidationError
 from typing import Tuple
 
 from rules.base import ValidationRule
+from schema_helpers import load_schema
 
 
 class Rule(ValidationRule):
@@ -60,32 +59,18 @@ class Rule(ValidationRule):
         if not schema_url:
             return ("FAIL", "Entity data missing required $schema field")
 
-        # Handle relative file:// URLs - resolve relative to working directory
-        if schema_url.startswith('file://') and not schema_url.startswith('file:///'):
-            import os
-            # Relative file:// URL (e.g., file://logic/models/schema.json)
-            # Remove 'file://' prefix and resolve to absolute path relative to cwd
-            relative_path = schema_url[7:]  # Remove 'file://'
-            cwd = os.getcwd()
-            absolute_path = os.path.join(cwd, relative_path)
-            absolute_path = os.path.abspath(absolute_path)  # Normalize the path
-            schema_url = f'file://{absolute_path}'
-
-        # Fetch schema directly from URI (supports file://, https://, http://)
+        # Load schema — disk cache first, URL fallback
         try:
-            with urllib.request.urlopen(schema_url, timeout=10) as response:
-                schema = json.loads(response.read())
-        except Exception as e:
-            return ("NORUN", f"Failed to fetch schema from {schema_url}: {str(e)}")
+            schema = load_schema(schema_url)
+        except RuntimeError as e:
+            return ("NORUN", str(e))
 
         # Validate entity data against schema
         try:
             validate(instance=entity_data, schema=schema)
             return ("PASS", "")
         except ValidationError as e:
-            # Extract meaningful error message
             error_path = " -> ".join(str(p) for p in e.path) if e.path else "root"
-            return ("FAIL",
-                    f"Schema validation failed at {error_path}: {e.message}")
+            return ("FAIL", f"Schema validation failed at {error_path}: {e.message}")
         except Exception as e:
             return ("FAIL", f"Schema validation error: {str(e)}")

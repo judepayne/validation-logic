@@ -17,6 +17,8 @@ structural_files:
   - entity_helpers/conversions.py
   - entity_helpers/write.py
   - entity_helpers/convert.py
+  - schema_helpers/__init__.py
+  - schema_helpers/schema_loader.py
 
 # Rulesets - validation rule sets with metadata
 # Rules are assigned per schema version for version-specific validation
