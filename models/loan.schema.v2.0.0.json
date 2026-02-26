@@ -183,7 +183,7 @@
           "operation_type": {
             "type": "string",
             "description": "Type of operation this note records",
-            "enum": ["note", "passed-validated", "failed-validated", "edited"]
+              "enum": ["note", "passed-validated", "failed-validated", "edited", "passed-with-warnings"]
           },
           "text": {
             "type": "string",
