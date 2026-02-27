@@ -1,0 +1,74 @@
+name: Data Quality Issue
+description: Report a problem with an existing rule, request a new rule, or ask a question. No coding knowledge required.
+title: "[Brief description of issue]"
+labels: []
+body:
+  - type: dropdown
+    id: issue_type
+    attributes:
+      label: What kind of issue is this?
+      options:
+        - Bug in an existing rule (rule is giving wrong results)
+        - New rule request (we need a check that doesn't exist yet)
+        - Change to an existing rule (rule logic needs updating)
+        - Schema or data model question
+        - Other
+    validations:
+      required: true
+
+  - type: dropdown
+    id: entity_type
+    attributes:
+      label: Which entity type is affected?
+      options:
+        - Loan
+        - Facility
+        - Deal
+        - Not sure
+    validations:
+      required: true
+
+  - type: textarea
+    id: description
+    attributes:
+      label: Description
+      description: Describe the problem or request in plain English. What are you seeing, and what should be happening instead?
+      placeholder: |
+        Example: Rule 002 is failing on loans where the interest rate is zero, but zero-rate loans are valid for internal transfers. The rule should allow a rate of 0 in those cases.
+    validations:
+      required: true
+
+  - type: textarea
+    id: example
+    attributes:
+      label: Example (optional)
+      description: Paste an example of a loan/entity that shows the problem, or describe a specific case. Sensitive data should be anonymised.
+      placeholder: |
+        Loan ID: LOAN-00123
+        Status: active
+        Interest rate: 0
+        Loan type: internal_transfer
+        → Rule 002 currently returns FAIL, but should return PASS
+    validations:
+      required: false
+
+  - type: textarea
+    id: business_requirement
+    attributes:
+      label: Business requirement
+      description: Why does this matter? Include any relevant policy, regulation, or business context. Mention any deadlines or urgency.
+      placeholder: |
+        This affects our month-end batch run. Zero-rate internal transfers
+        are standard practice under Treasury policy TP-014. Approx 200 loans
+        affected each month.
+    validations:
+      required: true
+
+  - type: input
+    id: contact
+    attributes:
+      label: Your name and team
+      description: So the DQ team lead can follow up with you directly.
+      placeholder: e.g. Jane Smith, Credit Risk
+    validations:
+      required: true

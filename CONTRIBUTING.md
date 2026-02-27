@@ -6,6 +6,20 @@ what to do when something needs to be rolled back.
 
 ---
 
+## Not sure where to start? Raise an issue
+
+If you've spotted a problem with an existing rule, want to request a new one, or
+have a question about the data model — but aren't ready to make a change yourself
+— **raise a GitHub issue**. No coding or Git knowledge required.
+
+[**→ Raise a Data Quality Issue**](../../issues/new/choose)
+
+The form asks for a plain-English description of the problem or request, an
+example if you have one, and the business context. The DQ team lead will triage
+it and either action it directly or assign it to the right person.
+
+---
+
 ## The golden rule: `main` is live
 
 The `main` branch of this repository is directly connected to the production
