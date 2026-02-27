@@ -5,15 +5,15 @@ Provides a stable, data-driven interface to entity data that shields
 validation rules from internal data model structure changes.
 """
 
-import os
 from .read import Reader
 from .version_registry import get_registry
 
-__all__ = ['Reader', 'get_registry', 'create_entity_helper']
+__all__ = ["Reader", "get_registry", "create_entity_helper"]
 
 
-def create_entity_helper(entity_type: str, entity_data: dict,
-                         track_access: bool = False) -> Reader:
+def create_entity_helper(
+    entity_type: str, entity_data: dict, track_access: bool = False
+) -> Reader:
     """
     Factory: return a Reader for the correct schema version of entity_data.
 
