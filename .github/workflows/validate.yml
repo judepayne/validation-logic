@@ -1,0 +1,129 @@
+name: Validate logic package
+
+on:
+  pull_request:
+    branches: [ main ]
+  push:
+    branches: [ main ]
+
+jobs:
+  validate:
+    name: validate
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Install dependencies
+        run: pip install ruff pyyaml jsonschema
+
+      - name: Lint Python files (ruff)
+        run: ruff check rules/ entity_helpers/ schema_helpers/
+
+      - name: Check Python syntax
+        run: |
+          find rules/ entity_helpers/ schema_helpers/ -name "*.py" | while read f; do
+            python -c "import ast; ast.parse(open('$f').read())" \
+              && echo "OK: $f" \
+              || { echo "SYNTAX ERROR: $f"; exit 1; }
+          done
+
+      - name: Check rule files define a Rule class
+        run: |
+          find rules/ -name "*.py" | while read f; do
+            python -c "
+          import ast, sys
+          tree = ast.parse(open('$f').read())
+          names = [n.name for n in ast.walk(tree) if isinstance(n, ast.ClassDef)]
+          if 'Rule' not in names:
+              print(f'MISSING Rule class: $f')
+              sys.exit(1)
+          else:
+              print(f'OK: $f')
+          "
+          done
+
+      - name: Validate business-config.yaml structure
+        run: |
+          python - <<'EOF'
+          import yaml, sys
+
+          with open("business-config.yaml") as f:
+              config = yaml.safe_load(f)
+
+          errors = []
+
+          if "rulesets" not in config:
+              errors.append("Missing top-level key: rulesets")
+
+          if "schema_to_helper_mapping" not in config:
+              errors.append("Missing top-level key: schema_to_helper_mapping")
+
+          for ruleset_name, ruleset in (config.get("rulesets") or {}).items():
+              if "rules" not in ruleset:
+                  errors.append(f"Ruleset '{ruleset_name}' missing 'rules' key")
+                  continue
+              for schema_key, rule_list in ruleset["rules"].items():
+                  if not isinstance(rule_list, list):
+                      errors.append(
+                          f"Ruleset '{ruleset_name}' / '{schema_key}': rules must be a list"
+                      )
+                      continue
+                  for entry in rule_list:
+                      if "rule_id" not in entry:
+                          errors.append(
+                              f"Ruleset '{ruleset_name}' / '{schema_key}': "
+                              f"entry missing 'rule_id': {entry}"
+                          )
+
+          if errors:
+              print("business-config.yaml validation FAILED:")
+              for e in errors:
+                  print(f"  - {e}")
+              sys.exit(1)
+          else:
+              print("business-config.yaml OK")
+          EOF
+
+      - name: Check rule_ids in config reference existing files
+        run: |
+          python - <<'EOF'
+          import yaml, os, sys
+          from pathlib import Path
+
+          with open("business-config.yaml") as f:
+              config = yaml.safe_load(f)
+
+          # Build set of known rule IDs from filenames
+          known = {p.stem for p in Path("rules").rglob("*.py") if p.stem != "__init__"}
+
+          missing = []
+          for ruleset_name, ruleset in (config.get("rulesets") or {}).items():
+              for schema_key, rule_list in (ruleset.get("rules") or {}).items():
+                  for entry in (rule_list or []):
+                      rid = entry.get("rule_id")
+                      if rid and rid not in known:
+                          missing.append(
+                              f"  '{rid}' (referenced in ruleset '{ruleset_name}' "
+                              f"/ '{schema_key}') has no matching rule file"
+                          )
+                      for child in (entry.get("children") or []):
+                          cid = child.get("rule_id")
+                          if cid and cid not in known:
+                              missing.append(
+                                  f"  '{cid}' (child rule in '{ruleset_name}') "
+                                  f"has no matching rule file"
+                              )
+
+          if missing:
+              print("Rule ID / file mismatches found:")
+              for m in missing:
+                  print(m)
+              sys.exit(1)
+          else:
+              print(f"All rule_ids resolved OK ({len(known)} rule files found)")
+          EOF

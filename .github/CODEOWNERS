@@ -1,0 +1,20 @@
+# CODEOWNERS — validation-logic
+#
+# GitHub uses this file to automatically assign reviewers to pull requests.
+# Replace the placeholder usernames with real GitHub usernames or team slugs
+# (e.g. @your-org/dq-team-leads).
+#
+# Syntax: <path pattern>  <owner> [<owner> ...]
+# The last matching rule wins.
+
+# Default: all DQ analysts can review any change
+*                               @dq-team
+
+# business-config.yaml controls what is live — team lead must approve
+business-config.yaml            @dq-team-leads
+
+# Schema files and entity helpers require platform engineer co-approval
+# because they affect the physical data model and version routing
+models/                         @dq-team-leads @platform-engineers
+entity_helpers/                 @dq-team-leads @platform-engineers
+schema_helpers/                 @dq-team-leads @platform-engineers
