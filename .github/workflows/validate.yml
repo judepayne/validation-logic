@@ -34,7 +34,8 @@ jobs:
 
       - name: Check rule files define a Rule class
         run: |
-          find rules/ -name "*.py" | while read f; do
+          # base.py defines ValidationRule (the ABC), not Rule — skip it
+          find rules/ -name "*.py" ! -name "base.py" | while read f; do
             python -c "
           import ast, sys
           tree = ast.parse(open('$f').read())
