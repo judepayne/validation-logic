@@ -43,6 +43,7 @@ This means:
 | `models/*.json` | DQ team lead + platform engineer | New or updated JSON schemas |
 | `entity_helpers/` | Platform engineer | Field mapping definitions (logical ↔ physical) |
 | `schema_helpers/` | Platform engineer | Schema loading utilities |
+| `plugins/` | DQ analysts + platform engineer | One-item source-format adapters that emit canonical entities |
 
 **Rule files are immutable once published.** Never edit a rule file that has already
 been merged to `main`. If a rule needs to change, create a new versioned file
@@ -72,8 +73,15 @@ For a new rule, you will typically change two files:
 1. **Create the rule file** — e.g. `rules/loan/rule_007_v1.py`
 2. **Update `business-config.yaml`** — add the new `rule_id` to the appropriate ruleset(s)
 
+For a new plugin, you will typically change two files:
+
+1. **Create the plugin file** — e.g. `plugins/vendor_x_loan.py`
+2. **Update `business-config.yaml`** — add the plugin under the top-level `plugins` section
+
+Plugins convert one raw source-format item into one canonical entity dict containing `$schema`. They do not parse whole datasets or run validation rules. Raise `PluginError` when source data cannot be converted.
+
 See the [Rules Guide](https://github.com/judepayne/validation-lib/blob/main/docs/RULES-GUIDE.md)
-for the full rule file format and examples.
+for the full rule file format and examples, and the [Plugins Guide](https://github.com/judepayne/validation-lib/blob/main/docs/PLUGINS.md) for plugin examples.
 
 ### Step 3 — Open a pull request
 
@@ -208,6 +216,7 @@ No analyst needs to remember who to add as a reviewer — GitHub does it.
 | Task | How |
 |---|---|
 | Start a new rule | Create branch → write `rules/loan/rule_NNN_vN.py` → update `business-config.yaml` → open PR |
+| Start a new plugin | Create branch → write `plugins/plugin_name.py` → register it in `business-config.yaml` → open PR |
 | Modify an existing rule | Create a new versioned file (`rule_NNN_v2.py`) — never edit the original |
 | Activate a rule in a ruleset | Edit `business-config.yaml`, add `rule_id` under the correct schema key |
 | Deactivate a rule | Edit `business-config.yaml`, remove or comment out the `rule_id` |

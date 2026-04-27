@@ -2,10 +2,7 @@
 
 Business logic for the validation platform — owned by the **Data Quality Team**.
 
-This repository contains validation rules, entity helpers, JSON schemas, and the
-`business-config.yaml` file that controls which rules are active and how they are
-routed. It is the single source of truth for all data quality checks run by the
-platform.
+This repository contains validation rules, source-format adapter plugins, entity helpers, JSON schemas, and the `business-config.yaml` file that controls which runtime assets are active and how they are routed. It is the single source of truth for all data quality checks run by the platform.
 
 ## How it connects to the live system
 
@@ -25,14 +22,14 @@ validation-logic/
 │   └── loan/              # Validation rule files (rule_NNN_vN.py)
 ├── entity_helpers/        # Field mapping helpers (logical → physical)
 ├── schema_helpers/        # Schema loading utilities
+├── plugins/               # One-item source-format adapters
 ├── models/                # JSON Schema files for each entity version
 └── business-config.yaml   # Master config — controls what is live
 ```
 
 ## For the Data Quality Team
 
-See [CONTRIBUTING.md](CONTRIBUTING.md) for the full workflow: how to add a rule,
-raise a PR, get it reviewed, and see it go live.
+See [CONTRIBUTING.md](CONTRIBUTING.md) for the full workflow: how to add a rule or plugin, raise a PR, get it reviewed, and see it go live.
 
 ## For platform engineers
 

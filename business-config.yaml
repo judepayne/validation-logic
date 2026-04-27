@@ -19,6 +19,14 @@ structural_files:
   - entity_helpers/convert.py
   - schema_helpers/__init__.py
   - schema_helpers/schema_loader.py
+  - plugins/__init__.py
+  - plugins/base.py
+
+# Plugins - source-format adapters that convert raw input items to canonical entities
+plugins:
+  vendor_x_loan:
+    file: plugins/vendor_x_loan.py
+    entity_type: loan
 
 # Rulesets - validation rule sets with metadata
 # Rules are assigned per schema version for version-specific validation
